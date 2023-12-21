@@ -4,6 +4,7 @@ import com.example.kreartsi.data.response.DeletePostResponse
 import com.example.kreartsi.data.response.DetailArtResponseItem
 import com.example.kreartsi.data.response.DonateRequest
 import com.example.kreartsi.data.response.DonateResponse
+import com.example.kreartsi.data.response.DonationHistoryResponse
 import com.example.kreartsi.data.response.EditPostRequestBody
 import com.example.kreartsi.data.response.EditPostResponse
 import com.example.kreartsi.data.response.EditProfileResponse
@@ -163,4 +164,19 @@ interface ApiService {
         @Header("token") authToken: String,
         @Query("searchTerm") searchTerm: String
     ): Call<List<SearchResponseItem>>
+
+    @GET("arts/donate/history")
+    suspend fun getCoinHistory(
+        @Header("token") authToken: String
+    ): List<DonationHistoryResponse>
+
+    @GET("users/my-data")
+    suspend fun getUserDataSuspend(
+        @Header("token") authToken: String
+    ): List<UserDataResponseItem>
+
+    @GET("users")
+    suspend fun getUsers(
+        @Header("token") authToken: String
+    ): List<UserDataResponseItem>
 }

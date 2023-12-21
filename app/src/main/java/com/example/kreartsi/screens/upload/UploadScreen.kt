@@ -45,9 +45,9 @@ import com.example.kreartsi.common.ui.ImageDrawable
 import com.example.kreartsi.common.ui.PrimaryButton
 import com.example.kreartsi.common.ui.SecondaryButton
 import com.example.kreartsi.navigation.KreartsiScreens
-import com.example.kreartsi.screens.profile.ProfileViewModel
 import com.example.kreartsi.screens.reduceFileImage
 import com.example.kreartsi.screens.uriToFile
+import com.vdurmont.emoji.EmojiParser
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -171,8 +171,14 @@ fun UploadScreen(
                     val imageFile = uriToFile(imageUri!!, context).reduceFileImage()
                     val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
 
-                    val requestBody = description.toRequestBody("text/plain".toMediaType())
+//                    val requestBody = EmojiParser.parseToUnicode(description).toRequestBody("text/plain; charset=utf-8".toMediaType())
 
+                    val uploadDescription = EmojiParser.parseToAliases(description)
+
+//                    showToast(EmojiParser.parseToUnicode(uploadDescription))
+
+                    val requestBody = uploadDescription.toRequestBody("text/plain".toMediaType())
+//
                     val multipartBody = MultipartBody.Part.createFormData(
                         "file",
                         imageFile.name,
@@ -189,14 +195,13 @@ fun UploadScreen(
                             showToast("Upload failed!")
                         }
                     }
-//                    if (viewModel.isUploaded.value != false){
-//                        navController.navigate(route = KreartsiScreens.HomeScreen.routeName)
-//                        showToast("Success Uploaded")
-//                    } else {
-//                        showToast("Upload failed!")
-//                    }
                 }
             }
         )
     }
+}
+
+fun convertEmoticonsToUploadFormat(input: String): String {
+    // Use EmojiParser to convert text with emoticons to Unicode characters
+    return EmojiParser.parseToUnicode(input)
 }

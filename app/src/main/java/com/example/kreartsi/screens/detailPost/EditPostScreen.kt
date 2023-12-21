@@ -61,6 +61,9 @@ import com.example.kreartsi.common.ui.ImageDrawable
 import com.example.kreartsi.common.ui.boxShadow
 import com.example.kreartsi.data.response.EditPostRequestBody
 import com.example.kreartsi.screens.detail.DetailScreenViewModel
+import com.vdurmont.emoji.EmojiParser
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun EditPostScreen(
@@ -84,7 +87,7 @@ fun EditPostScreen(
                 artworkId!!.toInt()
             ) { receivedImage, receivedCaption, receivedLike, receivedDate, receivedUid ->
                 imageUrl = receivedImage
-                caption = receivedCaption
+                caption = EmojiParser.parseToUnicode(receivedCaption)
                 like = receivedLike
                 date = receivedDate
                 uid = receivedUid
@@ -199,6 +202,16 @@ fun BodyEdit(
         mutableStateOf(description)
     }
 
+    var output_date by remember { mutableStateOf("") }
+
+    if (date!!.isNotEmpty()) {
+        val inputDateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+        val outputDateFormat = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy")
+        output_date = inputDateTime.format(outputDateFormat)
+    } else {
+        println("date empty")
+    }
+
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -218,9 +231,7 @@ fun BodyEdit(
             Spacer(modifier = Modifier.weight(1f))
         }
         Spacer(modifier = Modifier.height(24.dp))
-//        Text(
-//            text = description!!,
-//            fontSize = 12.sp)
+
         (if(descriptionEdit == ""){
             description
         }else{
@@ -238,7 +249,7 @@ fun BodyEdit(
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 32.dp)
                 .fillMaxWidth(),
-            text = date!!,
+            text = output_date,
             fontSize = 12.sp,
             color = Color0A,
             textAlign = TextAlign.End)
@@ -250,7 +261,7 @@ fun BodyEdit(
                     .weight(1f)
                     .padding(end = 16.dp, bottom = 32.dp),
                 onClick = {
-                    viewModel.editPost(token!!, artworkId!!, EditPostRequestBody(descriptionEdit!!))
+                    viewModel.editPost(token!!, artworkId!!, EditPostRequestBody(EmojiParser.parseToAliases(descriptionEdit!!)))
                     viewModel.isChanged.observe(lifecycleOwner){
                         if(it){
                             navController.navigate("art_post_detail/${artworkId}"){

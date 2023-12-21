@@ -94,6 +94,26 @@ class DetailScreenViewModel @Inject constructor(
         })
     }
 
+    fun getUserdata(token : String, callback: (Int) -> Unit){
+        apiService.getUserData(token).enqueue(object : Callback<List<UserDataResponseItem>>{
+            override fun onResponse(
+                call: Call<List<UserDataResponseItem>>,
+                response: Response<List<UserDataResponseItem>>
+            ) {
+                Log.d(ContentValues.TAG, "onSuccess: ${response.message()}")
+                val userData = response.body()?.first()
+                userData?.let {
+                    callback.invoke(it.userId)
+                }
+            }
+
+            override fun onFailure(call: Call<List<UserDataResponseItem>>, t: Throwable) {
+                Log.e(ContentValues.TAG, "onFailure: ${t.message.toString()}")
+            }
+
+        })
+    }
+
     fun getIsliked(token: String, artworkId: Int, callback: (Boolean) -> Unit){
         apiService.likedArt(token, artworkId).enqueue(object: Callback<LikeStatusResponse>{
             override fun onResponse(

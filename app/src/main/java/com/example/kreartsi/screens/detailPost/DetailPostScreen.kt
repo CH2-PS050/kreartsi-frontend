@@ -64,6 +64,9 @@ import com.example.kreartsi.common.ui.boxShadow
 import com.example.kreartsi.data.response.DonateRequest
 import com.example.kreartsi.navigation.KreartsiScreens
 import com.example.kreartsi.screens.detail.DetailScreenViewModel
+import com.vdurmont.emoji.EmojiParser
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 //@Preview(showBackground = true)
 @Composable
@@ -196,6 +199,16 @@ fun Body(
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+    var output_date by remember { mutableStateOf("") }
+
+    if (date!!.isNotEmpty()) {
+        val inputDateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+        val outputDateFormat = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy")
+        output_date = inputDateTime.format(outputDateFormat)
+    } else {
+        println("date empty")
+    }
+
     Column(
         modifier = Modifier.padding(horizontal = 16.dp)
     ) {
@@ -216,7 +229,7 @@ fun Body(
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = description!!,
+            text = EmojiParser.parseToUnicode(description!!),
             fontSize = 12.sp)
         Spacer(modifier = Modifier.height(10.dp))
         Divider(color = Black)
@@ -224,7 +237,7 @@ fun Body(
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 48.dp)
                 .fillMaxWidth(),
-            text = date!!,
+            text = output_date,
             fontSize = 12.sp,
             color = Color0A,
             textAlign = TextAlign.End)

@@ -113,6 +113,7 @@ fun Banner(navController: NavController) {
     var visibleArt by remember { mutableStateOf(true) }
 
     var visibleUser by remember { mutableStateOf(false) }
+    val coin = viewModel.coin.collectAsState().value
 
     LaunchedEffect(token, selectedMenu) {
         if (token != null){
@@ -147,7 +148,10 @@ fun Banner(navController: NavController) {
             res = R.drawable.coins)
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = "1000",
+            modifier = Modifier.clickable {
+                navController.navigate(KreartsiScreens.CoinHistoryScreen.routeName)
+            },
+            text = coin.toString(),
             color = White,
             fontSize = 12.sp,
             fontWeight = FontWeight.W700)
@@ -220,10 +224,12 @@ fun Banner(navController: NavController) {
             color = Gray,
             shape = RoundedCornerShape(10.dp),
         ) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     modifier = Modifier
-                        .padding(top = 6.dp, start = 12.dp, bottom = 6.dp)
+                        .padding(12.dp)
                         .clickable { expanded = !expanded },
                     text = selectedOrder,
                     color = Black,
@@ -610,7 +616,7 @@ fun Chip(
         shape = RoundedCornerShape(10.dp),
     ) {
         Text(
-            modifier = Modifier.padding(vertical = 6.dp, horizontal = 12.dp),
+            modifier = Modifier.padding(12.dp),
             text = label,
             color = if(label == selectedChip) White else Black,
             fontSize = 10.sp)

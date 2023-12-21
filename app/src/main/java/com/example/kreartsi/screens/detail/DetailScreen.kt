@@ -68,7 +68,11 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.KeyboardType
 import com.example.kreartsi.data.response.DonateRequest
 import com.example.kreartsi.data.response.LoginRequest
+import com.example.kreartsi.navigation.KreartsiScreens
+import com.vdurmont.emoji.EmojiParser
 import kotlinx.coroutines.flow.observeOn
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 //@Preview(showBackground = true)
 @Composable
@@ -84,6 +88,8 @@ fun DetailScreen(
     var like by remember { mutableStateOf(0) }
     var date by remember { mutableStateOf("") }
     var uid by remember { mutableStateOf(0) }
+
+    var uidLogedin by remember { mutableStateOf(0) }
 
     var isLikedRoot by remember { mutableStateOf(false) }
     var isSaved by remember { mutableStateOf(false) }
@@ -114,6 +120,16 @@ fun DetailScreen(
         }
     }
 
+    LaunchedEffect(token) {
+        if (token != null) {
+            viewModel.getUserdata(
+                token
+            ) { receivedUserId ->
+                uidLogedin = receivedUserId
+            }
+        }
+    }
+
     LaunchedEffect(token, artworkId){
         if (token != null && artworkId != null){
             viewModel.getIsliked(token,artworkId.toInt()){
@@ -137,7 +153,7 @@ fun DetailScreen(
     ) {
         Header(navController,imageUrl, like.toString(), isLikedRoot, token, artworkId?.toInt())
         Spacer(modifier = Modifier.padding(top = 13.dp))
-        Body(userName, caption, date, navController, uid)
+        Body(userName, caption, date, navController, uid, uidLogedin)
     }
 }
 
@@ -243,7 +259,8 @@ fun Body(
     caption: String?,
     date: String?,
     navController: NavController,
-    uid: Int?
+    uid: Int?,
+    uidLogedin: Int?
 ) {
     val viewModel: DetailScreenViewModel = hiltViewModel()
 
@@ -258,6 +275,16 @@ fun Body(
 
     fun showToast(message: String){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    var output_date by remember { mutableStateOf("") }
+
+    if (date!!.isNotEmpty()) {
+        val inputDateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+        val outputDateFormat = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy")
+        output_date = inputDateTime.format(outputDateFormat)
+    } else {
+        println("date empty")
     }
 
     Column(
@@ -275,12 +302,21 @@ fun Body(
             Text(
                 text = username!!,
                 fontWeight = FontWeight.W700,
-                fontSize = 12.sp)
+                fontSize = 12.sp,
+                modifier = Modifier.clickable {
+                    if (uid == uidLogedin){
+                        navController.navigate(
+                            KreartsiScreens.ProfileScreen.routeName
+                        )
+                    } else {
+                        navController.navigate("search_profile_screen/${uid}")
+                    }
+                })
             Spacer(modifier = Modifier.weight(1f))
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = caption!!,
+            text = EmojiParser.parseToUnicode(caption!!),
             fontSize = 12.sp)
         Spacer(modifier = Modifier.height(10.dp))
         Divider(color = Black)
@@ -288,7 +324,7 @@ fun Body(
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 87.dp)
                 .fillMaxWidth(),
-            text = date!!,
+            text = output_date,
             fontSize = 12.sp,
             color = Color0A,
             textAlign = TextAlign.End)

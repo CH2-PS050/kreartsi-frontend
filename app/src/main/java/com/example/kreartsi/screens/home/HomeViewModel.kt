@@ -14,6 +14,7 @@ import com.example.kreartsi.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -33,6 +34,9 @@ class HomeViewModel @Inject constructor(
     private val _userListState = MutableStateFlow<List<SearchResponseItem>>(emptyList())
     val usertListState: StateFlow<List<SearchResponseItem>> = _userListState
 
+    private val _coin = MutableStateFlow(0)
+    val coin get() = _coin.asStateFlow()
+
     private var _errorLiveData = MutableLiveData<String>()
     var errorLiveData: LiveData<String> = _errorLiveData
 
@@ -46,6 +50,29 @@ class HomeViewModel @Inject constructor(
 
     fun getArts(token : String, query: Boolean) {
         _isLoading.value = true
+        apiService.getUserData(token).enqueue(object: Callback<List<UserDataResponseItem>> {
+            override fun onResponse(
+                call: Call<List<UserDataResponseItem>>,
+                response: Response<List<UserDataResponseItem>>
+            ) {
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    _coin.value = if (body == null) 0 else body[0].coins
+                } else {
+                   val errorBody = response.errorBody()?.string()
+                    val errorMessage = try {
+                        _errorLiveData.value = JSONObject(errorBody!!).getString("message")
+                    } catch (e: JSONException) {
+                        "Error parsing JSON"
+                    }
+                    println("Error message: $errorMessage")
+                }
+            }
+
+            override fun onFailure(call: Call<List<UserDataResponseItem>>, t: Throwable) {
+                Log.e(ContentValues.TAG, "onFailure: ${t.message.toString()}")
+            }
+        })
         apiService.getArtSorted(token, query).enqueue(object : Callback<List<GetArtResponseItem>>{
             override fun onResponse(
                 call: Call<List<GetArtResponseItem>>,

@@ -55,7 +55,9 @@ fun KreartsiRoot() {
     Scaffold(
         floatingActionButton = {
             if(currentRoute == KreartsiScreens.HomeScreen.routeName)
-                FloatingActionButton(onClick = {
+                FloatingActionButton(
+                    containerColor = Black,
+                    onClick = {
                     navController.navigate(KreartsiScreens.UploadScreen.routeName)
                 }) {
                     IconVector(vector = Icons.Default.Add)
