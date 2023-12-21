@@ -98,4 +98,6 @@ dependencies {
     implementation("com.auth0:java-jwt:3.18.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+
+    implementation("com.vdurmont:emoji-java:5.1.1")
 }
