@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -62,7 +63,7 @@ fun IconVector(
 @Composable
 fun LabeledTextField(
     modifier: Modifier = Modifier,
-    keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction = ImeAction.Next,
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
@@ -77,6 +78,7 @@ fun LabeledTextField(
             fontSize = 15.sp,
             fontWeight = FontWeight.W700)
         Spacer(modifier = Modifier.height(16.dp))
+
         TextField(
             modifier = modifier.fillMaxWidth(),
             maxLines = 1,
@@ -85,10 +87,10 @@ fun LabeledTextField(
             placeholder = {
                 Text(text = label, color = Black24)
             },
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = imeAction),
             shape = RoundedCornerShape(10.dp),
             visualTransformation = visualTransformation,
-            trailingIcon = null
+            trailingIcon = null,
         )
     }
 }

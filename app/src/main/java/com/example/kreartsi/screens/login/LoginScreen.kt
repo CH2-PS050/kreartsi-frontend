@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -85,7 +86,7 @@ fun LoginScreen(
             modifier = Modifier.padding(start = 30.dp, end = 30.dp),
             value = email,
             label = "Email",
-            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next,
             onValueChange = { email = it },
             visualTransformation = VisualTransformation.None,
         )
@@ -94,7 +95,7 @@ fun LoginScreen(
             modifier = Modifier.padding(start = 30.dp, end = 30.dp),
             value = password,
             label = "Password",
-            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done,
             visualTransformation = PasswordVisualTransformation(),
             onValueChange = { password = it }
         )
