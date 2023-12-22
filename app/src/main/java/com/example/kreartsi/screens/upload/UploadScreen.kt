@@ -23,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -171,14 +170,10 @@ fun UploadScreen(
                     val imageFile = uriToFile(imageUri!!, context).reduceFileImage()
                     val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
 
-//                    val requestBody = EmojiParser.parseToUnicode(description).toRequestBody("text/plain; charset=utf-8".toMediaType())
-
                     val uploadDescription = EmojiParser.parseToAliases(description)
 
-//                    showToast(EmojiParser.parseToUnicode(uploadDescription))
-
                     val requestBody = uploadDescription.toRequestBody("text/plain".toMediaType())
-//
+
                     val multipartBody = MultipartBody.Part.createFormData(
                         "file",
                         imageFile.name,
@@ -199,9 +194,4 @@ fun UploadScreen(
             }
         )
     }
-}
-
-fun convertEmoticonsToUploadFormat(input: String): String {
-    // Use EmojiParser to convert text with emoticons to Unicode characters
-    return EmojiParser.parseToUnicode(input)
 }

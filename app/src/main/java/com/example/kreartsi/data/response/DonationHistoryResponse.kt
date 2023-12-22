@@ -1,12 +1,7 @@
 package com.example.kreartsi.data.response
 
-import com.google.gson.JsonArray
 import com.google.gson.annotations.SerializedName
 
-// To parse the JSON, install kotlin's serialization plugin and do:
-//
-// val json                     = Json { allowStructuredMapKeys = true }
-// val donationHistorytResponse = json.parse(DonationHistorytResponse.serializer(), jsonString)
 
 data class DonationHistoryResponse (
     @SerializedName("donation_id")
