@@ -21,6 +21,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "BASE_URL", "\"https://kreartsi-backend-skxqoblrgq-as.a.run.app/api/v1/\"")
+        buildConfigField("String", "BASE_URL_TWO", "\"https://kreartsi-demo-deploy-ml-skxqoblrgq-et.a.run.app/\"")
     }
 
     buildTypes {
