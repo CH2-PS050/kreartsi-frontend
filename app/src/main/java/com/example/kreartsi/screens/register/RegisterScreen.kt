@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,7 +46,6 @@ import com.example.kreartsi.common.ui.LabeledTextField
 import com.example.kreartsi.data.response.RegisterRequest
 import com.example.kreartsi.data.response.RegisterResponse
 import com.example.kreartsi.network.ApiService
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.json.JSONException
 import org.json.JSONObject
@@ -57,7 +55,6 @@ import retrofit2.Response
 import javax.inject.Inject
 
 
-
 var error = ""
 
 @Composable
@@ -65,7 +62,6 @@ fun RegisterScreen(
     navController: NavController = rememberNavController(),
 ) {
     val viewModel: RegisterViewModel = hiltViewModel()
-    var isPasswordVisible by remember { mutableStateOf(false) }
 
     var username by remember {
         mutableStateOf("")
